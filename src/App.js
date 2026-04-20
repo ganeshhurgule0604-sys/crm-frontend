@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Navbar from "./navbar/Navbar";
+import Login from "./auth/Login";
+import SignUp from "./auth/Signup";
+import Dashboead from "./componets/dashboard/Dashboard";
+import LeadList from "./componets/lead/LeadList";
+import UserList from "./componets/user/UserList";
+import ProjectList from "./componets/project/ProjectList";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Navbar />
+
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+
+          {/* Already protected via HOC */}
+          <Route path="/" element={<Dashboead />} />
+          <Route path="/leads" element={<LeadList />} />
+          <Route path="/users" element={<UserList />} />
+          <Route path="/projects" element={<ProjectList />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
