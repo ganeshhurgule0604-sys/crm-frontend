@@ -1,0 +1,78 @@
+/* REMOVE default browser spacing */
+body {
+  margin: 0;
+  padding: 0;
+}
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: #8e95d3;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+/* LEFT SIDE */
+.auth-left {
+  flex: 1;
+  background: linear-gradient(135deg, #0b1d4d, #1a2a6c);
+  color: white;
+  border-radius: 20px 0 0 20px;
+  padding: 60px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-left h1 {
+  margin-bottom: 20px;
+}
+
+.auth-left h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+/* RIGHT SIDE */
+.auth-right {
+  flex: 1;
+  background: #7e84c5;
+  border-radius: 0 20px 20px 0;
+
+  display: flex;
+  justify-content: center;  /* ✅ center horizontally */
+  align-items: center;      /* ✅ center vertically */
+}
+
+/* CARD */
+.auth-card {
+  width: 320px;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* FORM */
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-card input,
+.auth-card select {
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.auth-card button {
+  padding: 10px;
+  background: #2d6cdf;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

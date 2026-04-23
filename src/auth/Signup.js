@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Form from "../common/Form";
 import ApiService from "../common/apiService";
+import AuthLayout from "./AuthLayout";
+
 export default function SignUp() {
     const [loginObj, setLogin] = useState({
         name: '',
@@ -82,10 +84,10 @@ export default function SignUp() {
 
 
     return (
-        <>
+        <AuthLayout>
             <form onSubmit={onHandleSubmit}>
                 <Form params={userMap}></Form>
             </form>
-        </>
+        </AuthLayout>
     )
 }

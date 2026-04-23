@@ -1,24 +1,66 @@
-export default async function ApiService({ url, method = 'GET', formData }) {
-    const base_url = 'http://localhost:3000';
+import axios from "axios";
+import { toast } from "react-toastify";
 
-    try {
-        const response = await fetch(`${base_url}${url}`, {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: formData ? JSON.stringify(formData) : null,
-        });
+const api = axios.create({
+    baseURL: 'http://localhost:3000',
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
 
-        const result = await response.json();
+// ✅ Attach token
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
-        if (!response.ok) {
-            throw new Error(result.message || 'API Error');
+// ✅ Handle success + error globally
+api.interceptors.response.use(
+    (response) => {
+        // 🔥 SUCCESS POPUP (only for non-GET)
+        if (response.config.method !== "get") {
+            toast.success(response.data?.message || "Success!");
         }
 
-        return result;
-    } catch (error) {
-        console.error('API ERROR:', error.message);
-        throw error;
+        return response.data;
+    },
+    (error) => {
+        if (error.response) {
+
+            if (error.response.status === 401) {
+                toast.error("Session expired. Please login again.");
+
+                localStorage.removeItem("token");
+
+                // setTimeout(() => {
+                //     window.location.href = "/login";
+
+                // }, 2000);
+                // return; // ❌ STOP error here (no reject)
+
+            } else {
+                toast.error(error.response.data?.message || "Something went wrong");
+            }
+
+        } else {
+            toast.error("Server not reachable");
+        }
+
+        return Promise.reject(error);
     }
+);
+
+// ✅ Wrapper
+export default function ApiService({ url, method = 'GET', formData }) {
+    return api({
+        url,
+        method,
+        data: formData
+    });
 }

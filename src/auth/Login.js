@@ -2,13 +2,17 @@ import { type } from "@testing-library/user-event/dist/type";
 import { useState } from "react";
 import Form from "../common/Form";
 import ApiService from "../common/apiService";
-
+import AuthLayout from "./AuthLayout";
+import "./auth.css";
+import { useNavigate } from "react-router-dom";
 export default function Login() {
+
     const [loginForm, setLoginForm] = useState({
         email: "",
         phone: "",
         password: ""
     });
+    const navigate = useNavigate(); // 👈 top of component
 
 
     const onHandleChange = (e) => {
@@ -32,8 +36,11 @@ export default function Login() {
                     method: 'POST',
                     formData: loginForm
                 })
-
+                if (result?.data) {
+                    localStorage.setItem("token", result.data.token); // ✅ FIXED
+                }
                 console.log(result);
+                navigate('/');
             }
         } catch (error) {
             console.log(error)
@@ -59,11 +66,11 @@ export default function Login() {
 
 
     return (
-        <>
+        <AuthLayout>
             <form onSubmit={onHandleSubmit}>
                 <Form params={formData}></Form>
             </form>
-        </>
+        </AuthLayout>
     )
 
 }
