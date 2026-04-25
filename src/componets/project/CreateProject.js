@@ -1,14 +1,15 @@
 import { useState } from "react";
 import ApiService from "../../common/apiService";
 import Form from "../../common/Form";
+import { useNavigate } from "react-router-dom";
 
 export function CreateProject() {
     // 1. Initialize state with empty strings
     const [project, setProject] = useState({
         name: '',
         location: '',
-        status: '',
     });
+    const navigate = useNavigate();
 
     const onHandleChange = (e) => {
         const { name, value } = e.target;
@@ -24,6 +25,7 @@ export function CreateProject() {
                 formData: project
             });
             console.log("PROJECT CREATED:", result);
+            navigate('/projects')
             // Optional: Reset form or redirect after success
         } catch (error) {
             console.log("ERROR:", error.message);
@@ -34,7 +36,6 @@ export function CreateProject() {
     const projectMap = [
         { name: 'name', type: 'text', action: onHandleChange, value: project.name },
         { name: 'location', type: 'text', action: onHandleChange, value: project.location },
-        { name: 'status', type: 'text', action: onHandleChange, value: project.status },
         { name: 'submit', type: 'submit', value: 'Create Project' }
     ];
 

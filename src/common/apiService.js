@@ -38,11 +38,11 @@ api.interceptors.response.use(
 
                 localStorage.removeItem("token");
 
-                // setTimeout(() => {
-                //     window.location.href = "/login";
+                setTimeout(() => {
+                    window.location.href = "/login";
 
-                // }, 2000);
-                // return; // ❌ STOP error here (no reject)
+                }, 2000);
+                return; // ❌ STOP error here (no reject)
 
             } else {
                 toast.error(error.response.data?.message || "Something went wrong");

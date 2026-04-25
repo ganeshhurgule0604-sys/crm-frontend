@@ -2,6 +2,7 @@ import { useState } from "react";
 import Form from "../common/Form";
 import ApiService from "../common/apiService";
 import AuthLayout from "./AuthLayout";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
     const [loginObj, setLogin] = useState({
@@ -15,6 +16,7 @@ export default function SignUp() {
 
         password: ''
     });
+    const navigate = useNavigate();
     const onHandleChange = (e) => {
         const { name, value } = e.target;
 
@@ -35,7 +37,8 @@ export default function SignUp() {
                     formData: loginObj
                 });
                 console.log("SUCCESS:", result);
-
+                localStorage.setItem('token', result.data.token)
+                navigate('/users')
             }
 
 

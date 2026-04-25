@@ -2,69 +2,79 @@ import { useEffect, useState } from "react";
 import ApiService from "../../common/apiService";
 import "./user.css";
 import { useNavigate } from "react-router-dom";
+import CommonTable from "../../common/commonTable";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
+    const [meta, setMeta] = useState({
+        total: 0,
+        page: 1,
+        limit: 5
+    });
+
     const navigate = useNavigate();
-    const getUsers = async () => {
+
+    // 🔥 Fetch users with pagination
+    const getUsers = async (page = 1, limit = 5) => {
         try {
             const res = await ApiService({
-                url: "/user/list",
+                url: `/user/list?page=${page}&limit=${limit}`,
                 method: "GET",
             });
 
-            console.log("USERS:", res);
+            setUsers(res?.data || []);
 
-            // adjust based on your backend response
-            setUsers(res?.data || res);
+            setMeta({
+                total: res?.metaData?.total ?? 0,
+                page: res?.metaData?.page ?? 1,
+                limit: res?.metaData?.limit ?? 5
+            });
+
         } catch (err) {
             console.log(err);
         }
     };
 
+    // 🔥 Call API on page change
     useEffect(() => {
-        getUsers();
-    }, []);
+        getUsers(meta.page, meta.limit);
+    }, [meta.page]);
+
+    const totalPages =
+        meta.limit && meta.total
+            ? Math.ceil(meta.total / meta.limit)
+            : 1;
+
+    // ✅ Table config
+    const tableData = {
+        columns: [
+            {
+                header: "#",
+                render: (_, index) =>
+                    (meta.page - 1) * meta.limit + index + 1
+            },
+            { header: "Name", accessor: "name" },
+            { header: "Email", accessor: "email" },
+            { header: "Phone", accessor: "phone" },
+            { header: "Role", accessor: "role" }
+        ],
+
+        data: users,
+
+        // 🔥 Row click
+        rowClick: (row) => navigate(`/users/${row.id}`),
+
+        // 🔥 Pagination
+        currentPage: meta.page,
+        totalPages,
+        onPageChange: (page) =>
+            setMeta((prev) => ({ ...prev, page }))
+    };
 
     return (
         <div className="user-container">
             <h2>User List</h2>
-
-            <table className="user-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {users.length > 0 ? (
-                        users.map((user, index) => (
-                            <tr
-                                key={user.id}
-                                onClick={() => navigate(`/users/${user.id}`)} // 🔥 CLICK
-                                style={{ cursor: "pointer" }}
-                            >
-                                <td>{index + 1}</td>
-                                <td>{user.name || "-"}</td>
-                                <td>{user.email}</td>
-                                <td>{user.phone}</td>
-                                <td>{user.role}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="5" style={{ textAlign: "center" }}>
-                                No users found
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            <CommonTable {...tableData} />
         </div>
     );
 }

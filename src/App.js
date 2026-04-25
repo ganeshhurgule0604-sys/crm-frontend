@@ -12,7 +12,10 @@ import UserDetails from "./componets/user/UserDetails";
 import UpdateUser from "./componets/user/UpdateUser";
 import "./context/theme.css";
 import { ThemeProvider } from "./context/ThemeContext";
-
+import CreateLead from "./componets/lead/CreateLead";
+import { CreateProject } from "./componets/project/CreateProject";
+import UpdateProject from "./componets/project/UpdateProject";
+import UpdateLead from "./componets/lead/UpdateLead";
 function App() {
   return (
     <ThemeProvider>
@@ -25,13 +28,17 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
 
             <Route path="/" element={<Dashboead />} />
-            <Route path="/leads" element={<LeadList />} />
-            {/* ✅ Parent route */}
-            <Route path="/users">
-              <Route index element={<UserList />} />          {/* /users */}
-              <Route path=":id" element={<UserDetails />} />  {/* /users/1 */}
-              <Route path="/users/:id/edit" element={<UpdateUser />} />
-            </Route>          <Route path="/projects" element={<ProjectList />} />
+            <Route path="/leads" element={<LeadList />} >
+            </Route>
+            <Route path="/leads/create" element={<CreateLead />} />
+            <Route path="/leads/:id/edit" element={<UpdateLead />} />
+            <Route path="/users" index element={<UserList />} />          {/* /users */}
+            <Route path=":id" element={<UserDetails />} />  {/* /users/1 */}
+            <Route path="/users/:id/edit" element={<UpdateUser />} />
+
+            <Route path="/projects" element={<ProjectList />} />
+            <Route path="/projects/create" element={<CreateProject />} />
+            <Route path="/projects/:id" element={<UpdateProject />} />
           </Routes>
         </div>
         <ToastContainer position="top-right" autoClose={3000} />

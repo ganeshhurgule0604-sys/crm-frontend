@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import ApiService from "../../common/apiService";
 import Form from "../../common/Form";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function UpdateProject() {
     // Initialize state with keys to keep inputs controlled
     const [project, setProject] = useState({
         name: '',
         location: '',
-        status: ''
     });
-
+    const { id } = useParams();
+    const navigate = useNavigate();
     const getProject = async () => {
         try {
             const result = await ApiService({
-                url: '/project/1', // Replace with dynamic ID if using routing
+                url: `/project/${id}`, // Replace with dynamic ID if using routing
                 method: 'GET',
             });
 
@@ -21,7 +22,6 @@ export default function UpdateProject() {
                 setProject({
                     name: result.data.name || '',
                     location: result.data.location || '',
-                    status: result.data.status || '',
                 });
             }
         } catch (error) {
@@ -42,11 +42,13 @@ export default function UpdateProject() {
         e.preventDefault();
         try {
             const result = await ApiService({
-                url: "/project/1",
-                method: "PUT",
+                url: `/project/${id}`,
+                method: "PATCH",
                 formData: project
             });
             console.log("SUCCESS:", result);
+
+            navigate('/projects')
         } catch (error) {
             console.log("ERROR:", error.message);
         }
@@ -55,7 +57,6 @@ export default function UpdateProject() {
     const projectMap = [
         { name: 'name', type: 'text', action: onHandleChange, value: project.name },
         { name: 'location', type: 'text', action: onHandleChange, value: project.location },
-        { name: 'status', type: 'text', action: onHandleChange, value: project.status },
         { name: 'submit', type: 'submit', value: 'Update Project' }
     ];
 
