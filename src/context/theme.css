@@ -5,15 +5,26 @@
   --card-bg: #f5f5f5;
   --border-color: #ddd;
 }
-
 /* Dark Theme */
 [data-theme="dark"] {
-  --bg-color: #121212;
-  --text-color: #ffffff;
-  --card-bg: #1e1e1e;
-  --border-color: #333;
-}
+  --bg-color: #0f172a;        /* Main background */
+  --surface-color: #1e293b;   /* Cards / containers */
+  --card-bg: #1e293b;
 
+  --text-color: #e2e8f0;      /* Primary text */
+  --text-secondary: #94a3b8;  /* Secondary text */
+
+  --border-color: #334155;
+
+  --primary-color: #3b82f6;   /* Buttons / highlights */
+  --hover-color: #2563eb;
+
+  --success-color: #22c55e;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
 /* Apply globally */
 body {
   background: var(--bg-color);

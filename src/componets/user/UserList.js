@@ -3,9 +3,13 @@ import ApiService from "../../common/apiService";
 import "./user.css";
 import { useNavigate } from "react-router-dom";
 import CommonTable from "../../common/commonTable";
+import SearchList from "../../common/seachList";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
+
+    const [name, setName] = useState("");
+
     const [meta, setMeta] = useState({
         total: 0,
         page: 1,
@@ -14,11 +18,15 @@ export default function UserList() {
 
     const navigate = useNavigate();
 
-    // 🔥 Fetch users with pagination
-    const getUsers = async (page = 1, limit = 5) => {
+    // Fetch users
+    const getUsers = async (
+        page = 1,
+        limit = 5,
+        name = ""
+    ) => {
         try {
             const res = await ApiService({
-                url: `/user/list?page=${page}&limit=${limit}`,
+                url: `/user/list?page=${page}&limit=${limit}&name=${name}`,
                 method: "GET",
             });
 
@@ -35,17 +43,15 @@ export default function UserList() {
         }
     };
 
-    // 🔥 Call API on page change
     useEffect(() => {
-        getUsers(meta.page, meta.limit);
-    }, [meta.page]);
+        getUsers(meta.page, meta.limit, name);
+    }, [meta.page, name]);
 
     const totalPages =
         meta.limit && meta.total
             ? Math.ceil(meta.total / meta.limit)
             : 1;
 
-    // ✅ Table config
     const tableData = {
         columns: [
             {
@@ -61,12 +67,11 @@ export default function UserList() {
 
         data: users,
 
-        // 🔥 Row click
         rowClick: (row) => navigate(`/users/${row.id}`),
 
-        // 🔥 Pagination
         currentPage: meta.page,
         totalPages,
+
         onPageChange: (page) =>
             setMeta((prev) => ({ ...prev, page }))
     };
@@ -74,6 +79,13 @@ export default function UserList() {
     return (
         <div className="user-container">
             <h2>User List</h2>
+
+            <SearchList
+                placeHolder="Search here"
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+            />
+
             <CommonTable {...tableData} />
         </div>
     );
